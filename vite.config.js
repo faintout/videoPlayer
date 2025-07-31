@@ -9,9 +9,13 @@ export default defineConfig({
     vue(),
     // vueDevTools(),
   ],
+  base: '/video-player',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
+  },
+  build: {
+    outDir: 'video-player',
   },
 })
