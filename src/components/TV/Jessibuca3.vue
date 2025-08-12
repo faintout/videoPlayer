@@ -124,7 +124,7 @@ const props = defineProps({
 })
 
 // 定义 emits
-const emit = defineEmits(['error'])
+const emit = defineEmits(['onError','onPlay'])
 
 // 响应式数据
 const container = ref(null)
@@ -225,12 +225,12 @@ const create = (options) => {
 
   jessibuca.value.on("error", function (error) {
     console.log("error", error);
-    emit('error', error);
+    emit('onError', error);
   });
 
   jessibuca.value.on("timeout", function () {
     console.log("timeout");
-    emit('error', 'timeout');
+    emit('onError', 'timeout');
   });
 
   jessibuca.value.on('start', function () {
@@ -263,6 +263,7 @@ const create = (options) => {
     playing.value = true;
     loaded.value = true;
     quieting.value = jessibuca.value.isMute();
+    emit('onPlay')
   });
 
   jessibuca.value.on('recordingTimestamp', (ts) => {

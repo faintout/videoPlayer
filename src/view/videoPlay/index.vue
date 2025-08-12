@@ -2,11 +2,12 @@
    <div class="video-player-container">
       <template v-if="url">
          <!-- webRTC -->
-         <WebRTCVideo :url="url" v-if="urlType === 'rtc'" @error="handleError" />
+         <WebRTCVideo :url="url" v-if="urlType === 'rtc'" @onError="onError" @onPlay="onPlay" />
          <!-- h264/h265 -->
          <H264H265Video :flvUrl="url" v-if="urlType === 'h264'||urlType === 'h265'" 
             style="width: 100%;height: 100%;"
-            @error="handleError"
+            @onError="onError"
+            @onPlay="onPlay"
          />
       </template>
       <div class="tip-content" v-if="errorMsg">
@@ -32,8 +33,12 @@
  const player = ref(null)
  
  // 方法定义
- const handleError = (error) => {
+ const onError = (error) => {
    errorMsg.value = error
+ }
+
+ const onPlay = () => {
+   errorMsg.value = ''
  }
  
  const getUrlParams = () => {
