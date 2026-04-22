@@ -50,7 +50,7 @@ npm start
 播放器通过 URL 参数来配置播放源和播放类型：
 
 ```
-http://localhost:5173/videoPlay?urlType=<类型>&url=<视频地址>
+http://localhost:5173/videoPlay?urlType=<类型>&url=<视频地址>&playerId=<播放器ID>&callbackUrl=<父页面源地址>
 ```
 
 #### 参数说明
@@ -59,6 +59,8 @@ http://localhost:5173/videoPlay?urlType=<类型>&url=<视频地址>
 |--------|------|------|------|--------|
 | `urlType` | string | ✅ | 视频流类型 | `rtc`, `h264`, `h265` |
 | `url` | string | ✅ | 视频流地址 | 完整的视频流URL |
+| `playerId` | string | ❌ | 播放器实例标识，错误回传时透传 | 任意字符串 |
+| `callbackUrl` | string | ❌ | 父页面源地址，作为 `postMessage` 的 `targetOrigin` | 例如 `https://parent.example.com` |
 
 #### 使用示例
 
@@ -76,6 +78,19 @@ http://localhost:5173/videoPlay?urlType=h264&url=https://example.com/video.flv
 ```
 http://localhost:5173/videoPlay?urlType=h265&url=https://example.com/video.h265
 ```
+
+**带错误回传参数：**
+```
+http://localhost:5173/videoPlay?urlType=rtc&url=https%3A%2F%2Fexample.com%2Fwebrtc%2Fstream&playerId=player-001&callbackUrl=https%3A%2F%2Fparent.example.com
+```
+
+当播放器产生错误时，会向父页面（`window.parent` 或 `window.opener`）发送 `postMessage`，消息结构包含：
+
+- `type`: 固定为 `videoPlayerError`
+- `playerId`: 透传 URL 参数中的播放器标识
+- `errorMsg`: 当前错误信息
+- `urlType` / `url`: 当前播放参数
+- `timestamp`: 错误发生时间戳
 
 ### 支持的视频格式
 
